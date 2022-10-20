@@ -25,13 +25,12 @@ let IdReservar = document.getElementById("IdReservar");
 const buttonCancelar = document.querySelector("#cancelar")
 const textValuetopay = document.querySelector("#IdCuentaFactura")
 const sillas = document.querySelector("#IdNumsClciks");
-
-
-
 PintarSillasSala(acientos, SalaCine);
-var sillasCompradas = 0;
 
-//event click in sala cine
+
+
+let sillasRojoCompradas = [];
+var sillasCompradas = 0;
 SalaCine.addEventListener('click', (evento) => {
     const vaaueMovie = 10000;
     if (evento.target.tagName == "IMG") {
@@ -40,16 +39,16 @@ SalaCine.addEventListener('click', (evento) => {
             Hilera.forEach((aciento) => {
                 if (aciento.id == idElementoSeleccionado) {
                     if (aciento.estado == 0) {
-                        sillasCompradas++;
                         aciento.estado = 1;
-                        event.target.src = "../../assets/img/cinema-chair-Green.png"
-                        sillas.value = sillasCompradas
-                        localStorage
+                        evento.target.src = "../../assets/img/cinema-chair-Green.png";
+                        sillasCompradas++;
+                        sillas.value = sillasCompradas;
                     } else if (aciento.estado == 1) {
-                        aciento.estado = 0;
-                        if (sillasCompradas >= 0) sillasCompradas--;
-                        event.target.src = "../../assets/img/cinema-chair.png"
-                        sillas.value = sillasCompradas
+                        aciento.estado = 0; 
+                        if (sillasCompradas >= 0) 
+                        evento.target.src = "../../assets/img/cinema-chair.png";
+                        sillasCompradas--;
+                        sillas.value = sillasCompradas;
                     }
                 }
             })
@@ -58,36 +57,25 @@ SalaCine.addEventListener('click', (evento) => {
     let totalToPay = vaaueMovie * sillasCompradas;
     textValuetopay.value = totalToPay
 })
+
 IdReservar.addEventListener('click', () => {
-    
+    let i=0
     SalaCine.innerHTML = " ";
-    
     acientos.forEach((Hilera) => {
         Hilera.forEach((aciento) => {
             if (aciento.estado == 1) {
+                i += 1
                 sillasCompradas++;  
                 aciento.estado = 2;
             }
         })
     })
+    localStorage.setItem(`asientos${nombrePelicula}`, JSON.stringify(asientos));
     sillas.value = 0;
     textValuetopay.value = 0;
     sillasCompradas = 0;
     PintarSillasSala(acientos, SalaCine);
 })
- 
-buttonCancelar.addEventListener("click", ()=> {
-    SalaCine.innerHTML = " ";
-    acientos.forEach((Hilera) => {
-        Hilera.forEach((aciento) => {
-            if (aciento.estado == 1) {
-                aciento.estado = 0;
-            }
-        })
-    })
-    sillas.value = 0;
-    textValuetopay.value = 0;
-    PintarSillasSala(acientos, SalaCine)
-    sillasCompradas = 0;
-})
 
+
+ 
